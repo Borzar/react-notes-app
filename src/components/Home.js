@@ -9,22 +9,22 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
-const Home = (userEmail) => {
+const Home = ({userEmail}) => {
 
     const [arrayNotes, setArrayNotes] = useState(null);
 
 
     const fakedata = [
-        { id: "01", description: "nota falsa1", url: "https://picsum.photos/420" },
-        { id: "02", description: "nota falsa2", url: "https://picsum.photos/420" },
-        { id: "03", description: "nota falsa3", url: "https://picsum.photos/420" },
+        { id: 1, description: "nota falsa1", url: "https://picsum.photos/420" },
+        { id: 2, description: "nota falsa2", url: "https://picsum.photos/420" },
+        { id: 3, description: "nota falsa3", url: "https://picsum.photos/420" },
     ];
 
-    const searchDocumentOrCreateDocument = async (idDocument) => {
+        async function searchDocumentOrCreateDocument(idDocument) {
         //crear una referencia al docmento
-        const documentRef = doc(firestore, `users/${idDocument}`);
-        //revisar si existe
-        const consulting = await getDoc(documentRef);
+        const docuRef = doc(firestore, `users/${idDocument}`);
+        //buscar documento
+        const consulting = await getDoc(docuRef);
         // revisar si existe
         if (consulting.exists()) {
             // si si existe
@@ -32,8 +32,8 @@ const Home = (userEmail) => {
             return infoDocu.notes;
         } else {
             // si no existe
-            await setDoc(documentRef, { notes: [...fakedata] })
-            const consulting = await getDoc(documentRef);
+            await setDoc(docuRef, { notes: [...fakedata] });
+            const consulting = await getDoc(docuRef);
             const infoDocu = consulting.data();
             return infoDocu.notes;
         }
@@ -62,7 +62,7 @@ const Home = (userEmail) => {
                 userEmail={userEmail}
             />
             {
-                arrayNotes ? (
+                arrayNotes ? (  
                     <ListNotes
                         arrayNotes={arrayNotes}
                         setArrayNotes={setArrayNotes}
@@ -72,8 +72,8 @@ const Home = (userEmail) => {
                 ) : null
             }
         </Container>
-    )
+    );
 
-}
+};
 
 export default Home;

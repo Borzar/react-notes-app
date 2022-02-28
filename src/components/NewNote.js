@@ -9,11 +9,11 @@ const storage = getStorage(firebaseApp);
 
 
 export default function NewNote({userEmail, setArrayNotes, arrayNotes}) {
+    //Queda deshabilitado por el momento añade archivo 
+    //let urlDownload;
 
-    let urlDownload;
-
-    const addNote = async (e) => {
-        e.preventDefault()
+        async function addNote(e) {
+        e.preventDefault();
         const description = e.target.formDescription.value;
         //crear nuevo arrray de notas
         const newArrayNotes = [
@@ -21,7 +21,7 @@ export default function NewNote({userEmail, setArrayNotes, arrayNotes}) {
             {
                 id: +new Date(),
                 description: description,
-                url: urlDownload,
+             //   url: urlDownload,
             },
         
         ];
@@ -34,15 +34,15 @@ export default function NewNote({userEmail, setArrayNotes, arrayNotes}) {
         e.target.formDescription.value = "";
     }
 
-   const fileHandler = async (e) => {
+    //async function fileHandler(e) {
        //detectar archivo
-       const archiveLocal = e.target.files[0];
+     //  const archiveLocal = e.target.files[0];
        //cargarlo a firebase storage
-       const archiveRef = ref(storage, `document/${archiveLocal.name}`);
-       await uploadBytes(archiveRef, archiveLocal);
+      // const archiveRef = ref(storage, `document/${archiveLocal.name}`);
+      // await uploadBytes(archiveRef, archiveLocal);
        //obtener url de descarga
-       urlDownload = await getDownloadURL(archiveRef);
-   } 
+      // urlDownload = await getDownloadURL(archiveRef);
+  // } 
 
     return (
         <Container>
@@ -51,9 +51,7 @@ export default function NewNote({userEmail, setArrayNotes, arrayNotes}) {
                     <Col>
                         <Form.Control type='text' placeholder='Describe tu nota' id="formDescription" />
                     </Col>
-                    <Col>
-                        <Form.Control type='file' placeholder='añade archivo' ondChange={fileHandler}/>
-                    </Col>
+                    
                     <Col>
                         <Button type="submit">Agregar Nota</Button>
                     </Col>

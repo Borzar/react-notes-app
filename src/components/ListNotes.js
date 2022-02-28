@@ -26,9 +26,7 @@ const ListNotes = ({arrayNotes, userEmail, setArrayNotes}) => {
                         <>
                         <Row>
                             <Col>{objNote.description}</Col>
-                            <a href={objNote.url}>
-                            <Col> <Button variant="secondary">Ver Archivo</Button></Col>
-                            </a>
+                            
                             <Col><Button variant="danger" onClick={()=> deleteNote(objNote.id)} >Eliminar Nota</Button></Col>
                         </Row>
                         <hr />
