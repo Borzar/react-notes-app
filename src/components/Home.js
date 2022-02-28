@@ -5,6 +5,7 @@ import { Container, Button } from "react-bootstrap";
 import NewNote from './NewNote';
 import ListNotes from "./ListNotes";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import NewReminder from './NewReminder';
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -56,6 +57,7 @@ const Home = ({userEmail}) => {
             <h4>Hola, Sesion inciada</h4>
             <Button onClick={() => signOut(auth)} >Cerrar sesion </Button>
             <hr />
+            
             <NewNote
                 arrayNotes={arrayNotes}
                 setArrayNotes={setArrayNotes}
@@ -71,6 +73,7 @@ const Home = ({userEmail}) => {
                     />
                 ) : null
             }
+            <NewReminder />
         </Container>
     );
 
