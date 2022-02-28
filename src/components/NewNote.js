@@ -2,9 +2,9 @@ import React, { } from 'react';
 import { Container, Form, Col, Row, Button } from "react-bootstrap";
 import { firebaseApp } from '../firebase';
 import { getFirestore, updateDoc, doc } from 'firebase/firestore';
-import { getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage"
+
 const firestore = getFirestore(firebaseApp);
-const storage = getStorage(firebaseApp);
+
 
 
 
@@ -49,7 +49,7 @@ export default function NewNote({userEmail, setArrayNotes, arrayNotes}) {
             <Form onSubmit={addNote} >
                 <Row className="mb-5">
                     <Col>
-                        <Form.Control type='text' placeholder='Describe tu nota' id="formDescription" />
+                        <Form.Control as='textarea' type="text" rows={6} placeholder='Describe tu nota' id="formDescription" />
                     </Col>
                     
                     <Col>
