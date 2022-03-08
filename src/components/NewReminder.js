@@ -1,15 +1,55 @@
-import { getFirestore, updateDoc, doc } from 'firebase/firestore';
-import React from 'react';
+import {
+  getFirestore,
+  updateDoc,
+  doc,
+  getDoc,
+  setDoc,
+} from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import { firebaseApp } from '../firebase';
+import ListReminders from './ListReminders';
 
 const firestore = getFirestore(firebaseApp);
 
-export default function NewReminder({
-  userEmail,
-  arrayReminder,
-  setArrayReminder,
-}) {
+export default function NewReminder({ userEmail }) {
+  const [arrayReminder, setArrayReminder] = useState(null);
+
+  const fakeDataReminders = [
+    { id: 4, reminderDesc: 'recordatorio de prueba 1' },
+    { id: 5, reminderDesc: 'recordatorio de prueba 2' },
+    { id: 6, reminderDesc: 'recordatorio de prueba 3' },
+  ];
+
+  async function searchDocumentOrCreateDocumentReminder(idDocument) {
+    //crear una referencia al docmento
+    const documentRef = doc(firestore, `users/${idDocument}`);
+    //buscar documento
+    const consulting = await getDoc(documentRef);
+    // revisar si existe
+    if (consulting.exists()) {
+      // si si existe
+      const infoDocument = consulting.data();
+      return infoDocument.reminder;
+    } else {
+      // si no existe
+      await setDoc(documentRef, { reminder: [...fakeDataReminders] });
+      const consulting = await getDoc(documentRef);
+      const infoDocument = consulting.data();
+      return infoDocument.reminder;
+    }
+  }
+
+  useEffect(() => {
+    async function fetchReminders() {
+      const reminderFetch = await searchDocumentOrCreateDocumentReminder(
+        userEmail
+      );
+      setArrayReminder(reminderFetch);
+    }
+    fetchReminders();
+  }, []);
+
   const addReminder = async (e) => {
     // e = es el objeto que representa el evento
     // target = es el elemento que recibe el objeto
@@ -52,10 +92,22 @@ export default function NewReminder({
           </Col>
 
           <Col>
-            <Button type="submit">Agregar recordatorio</Button>
+            <Button type="submit" size="sm">
+              Agregar recordatorio
+            </Button>
           </Col>
         </Row>
       </Form>
+      <hr />
+      <Row>
+        {arrayReminder ? (
+          <ListReminders
+            arrayReminder={arrayReminder}
+            setArrayReminder={setArrayReminder}
+            userEmail={userEmail}
+          />
+        ) : null}
+      </Row>
     </Container>
   );
 }

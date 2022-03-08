@@ -1,68 +1,45 @@
 import React from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import Content from './Content';
 import NewNote from './NewNote';
 import NewReminder from './NewReminder';
 import NewTask from './NewTask';
-import ListNotes from './ListNotes';
-import Home from './Home';
+import NotFoundPage from './NotFoundPage';
 
-const Navbar = () => {
+const NavBar = ({ userEmail }) => {
   return (
     <>
-      <section>
-        <div>
-          <header>
-            <h3>
-              <nav>
-                <ul>
-                  <li>
-                    <Link to="/Home">Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/Content">Contenido</Link>
-                  </li>
-                  <li>
-                    <Link to="/NewNote">NewNote</Link>
-                  </li>
-                  <li>
-                    <Link to="/ListNotes">ListNotes</Link>
-                  </li>
-                  <li>
-                    <Link to="/NewReminder">NewReminder</Link>
-                  </li>
-                  <li>
-                    <Link to="/NewTask">NewTask</Link>
-                  </li>
-                </ul>
-              </nav>
-            </h3>
-          </header>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/NewNote">Mis Notas</Link>
+            </li>
 
-          <Routes>
-            <Route path="/Home" element={<Home />}>
-              {' '}
-            </Route>
-            <Route path="/Content" element={<Content />}>
-              {' '}
-            </Route>
-            <Route path="/NewNote" element={<NewNote />}>
-              {' '}
-            </Route>
-            <Route path="/ListNotes" element={<ListNotes />}>
-              {' '}
-            </Route>
-            <Route path="/NewReminder" element={<NewReminder />}>
-              {' '}
-            </Route>
-            <Route path="/NewTask" element={<NewTask />}>
-              {' '}
-            </Route>
-          </Routes>
-        </div>
-      </section>
+            <li>
+              <Link to="/NewReminder">Mis Recordatorios</Link>
+            </li>
+            <li>
+              <Link to="/NewTask">Mis Tareas</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route
+            path="/NewNote"
+            element={<NewNote userEmail={userEmail} />}
+          ></Route>
+
+          <Route
+            path="/NewReminder"
+            element={<NewReminder userEmail={userEmail} />}
+          ></Route>
+          <Route path="/NewTask" element={<NewTask />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Routes>
+      </div>
     </>
   );
 };
 
-export default Navbar;
+export default NavBar;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Col, Container, Stack, Row, Button } from 'react-bootstrap';
-
 import { firebaseApp } from '../firebase';
 import { getFirestore, updateDoc, doc } from 'firebase/firestore';
 const firestore = getFirestore(firebaseApp);
@@ -31,6 +30,7 @@ const ListNotes = ({ arrayNotes, userEmail, setArrayNotes }) => {
                   <Button
                     variant="danger"
                     onClick={() => deleteNote(objNote.id)}
+                    size="sm"
                   >
                     Eliminar Nota
                   </Button>

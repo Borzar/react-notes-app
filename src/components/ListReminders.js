@@ -27,23 +27,19 @@ const ListReminders = ({ userEmail, arrayReminder, setArrayReminder }) => {
           return (
             <>
               <Row>
-                <Col>My Reminder</Col>
-                <Col>Date</Col>
-                <Col></Col>
-                <Row>
-                  <Col>{objReminder.reminderDesc}</Col>
-                  <Col>{objReminder.date}</Col>
-                  <Col>
-                    <Button
-                      variant="danger"
-                      onClick={() => deleteReminder(objReminder.id)}
-                    >
-                      Eliminar recordatorio
-                    </Button>
-                  </Col>
-                </Row>
-                <hr />
+                <Col>{objReminder.reminderDesc}</Col>
+                <Col>{objReminder.date}</Col>
+                <Col>
+                  <Button
+                    variant="danger"
+                    onClick={() => deleteReminder(objReminder.id)}
+                    size="sm"
+                  >
+                    Eliminar recordatorio
+                  </Button>
+                </Col>
               </Row>
+              <hr />
             </>
           );
         })}

@@ -1,13 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Col, Row, Button } from 'react-bootstrap';
 import { firebaseApp } from '../firebase';
-import { getFirestore, updateDoc, doc } from 'firebase/firestore';
+import ListNotes from './ListNotes';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 
 const firestore = getFirestore(firebaseApp);
 
-export default function NewNote({ userEmail, setArrayNotes, arrayNotes }) {
-  //Queda deshabilitado por el momento añade archivo
-  //let urlDownload;
+export default function NewNote({ userEmail }) {
+  const [arrayNotes, setArrayNotes] = useState(null);
+
+  const fakedata = [
+    {
+      id: 1,
+      description: 'nota de prueba 1',
+      url: 'https://picsum.photos/420',
+    },
+    {
+      id: 2,
+      description: 'nota de prueba 2',
+      url: 'https://picsum.photos/420',
+    },
+    {
+      id: 3,
+      description: 'nota de prueba 3',
+      url: 'https://picsum.photos/420',
+    },
+  ];
+
+  async function searchDocumentOrCreateDocument(idDocument) {
+    //crear una referencia al docmento
+    const docuRef = doc(firestore, `users/${idDocument}`);
+    //buscar documento
+    const consulting = await getDoc(docuRef);
+    // revisar si existe
+    if (consulting.exists()) {
+      // si si existe
+      const infoDocu = consulting.data();
+      return infoDocu.notes;
+    } else {
+      // si no existe
+      await setDoc(docuRef, { notes: [...fakedata] });
+      const consulting = await getDoc(docuRef);
+      const infoDocu = consulting.data();
+      return infoDocu.notes;
+    }
+  }
+
+  useEffect(() => {
+    async function fetchNotes() {
+      const notesFechadas = await searchDocumentOrCreateDocument(userEmail);
+      setArrayNotes(notesFechadas);
+    }
+    fetchNotes();
+  }, []);
 
   async function addNote(e) {
     e.preventDefault();
@@ -18,7 +69,6 @@ export default function NewNote({ userEmail, setArrayNotes, arrayNotes }) {
       {
         id: +new Date(),
         description: description,
-        //   url: urlDownload,
       },
     ];
     //actualizar base de datos
@@ -29,16 +79,6 @@ export default function NewNote({ userEmail, setArrayNotes, arrayNotes }) {
     // limpiar buscador
     e.target.formDescription.value = '';
   }
-
-  //async function fileHandler(e) {
-  //detectar archivo
-  //  const archiveLocal = e.target.files[0];
-  //cargarlo a firebase storage
-  // const archiveRef = ref(storage, `document/${archiveLocal.name}`);
-  // await uploadBytes(archiveRef, archiveLocal);
-  //obtener url de descarga
-  // urlDownload = await getDownloadURL(archiveRef);
-  // }
 
   return (
     <Container>
@@ -56,11 +96,22 @@ export default function NewNote({ userEmail, setArrayNotes, arrayNotes }) {
           </Col>
 
           <Col>
-            <Button type="submit">Agregar Nota</Button>
+            <Button type="submit" size="sm">
+              Agregar Nota
+            </Button>
           </Col>
         </Row>
       </Form>
       <hr />
+      <Row>
+        {arrayNotes ? (
+          <ListNotes
+            arrayNotes={arrayNotes}
+            setArrayNotes={setArrayNotes}
+            userEmail={userEmail}
+          />
+        ) : null}
+      </Row>
     </Container>
   );
 }
